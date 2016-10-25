@@ -1,0 +1,38 @@
+<% @title="Bright Ideas"%>
+<h4>Hi <%=@user.alias %>!</h4>
+<a href="/logout/">Logout</a>
+
+<% if flash[:invalid] %>
+<p><%= flash[:invalid] %></p>
+<% end %>
+<form action="/addidea/" method="post">
+<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+	<input id="ideainput" type="text" name="content" value="Post something witty here...">
+	<input type="hidden" name="ideaposter" value="<%= @user.id %>">
+	<input type="submit" value="Idea!">
+</form>
+
+<div id="idea_display">
+	<% if @ideas %>
+	<% @ideas.each do |idea| %>
+		<p><a href="/users/<%= idea.user.id %>"><%= idea.user.alias %></a> says: <%= idea.content %></p>
+		<% if idea.user_id == @user.id %>
+			<form action="/ideas/<%= idea.id %>/destroy" method="post">
+				<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+				<input type="hidden" name="_method" value="delete">
+				<input type="submit" value="Delete">
+			</form>	
+		<% end %>
+		<% if idea.users_liked.include?(@user) %>
+			<p>You have already liked this idea...</p>
+		<% else %>
+			<form action="/addlike/<%= idea.id %>" method="post">
+				<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+				<input type="submit" value="Like">
+			</form>
+		<% end %>
+		<p><a href="/bright_ideas/<%= idea.id %>"><%= idea.likes.count%> people</a> like this</p>
+	<% end %>
+	<% end %>
+</div>
+

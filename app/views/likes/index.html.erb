@@ -1,0 +1,25 @@
+<% @title="Like Status"%>
+<a href="/bright_ideas/">Bright Ideas</a>
+<a href="/logout/">Logout</a>
+
+<p><%=@poster.user.alias%> says: <%= @poster.content%> </p>
+
+<h4>People who liked this post:</h4>
+<table>
+	<thead>
+		<tr>
+			<th>Alias</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%if @users_liked %>
+		<% @users_liked.each do |person|%>
+		<tr>
+			<td><a href="/users/<%= person.user.id %>"><%= person.user.alias%></a></td>
+			<td><%= person.user.name%></td>
+		</tr>
+		<% end %>
+		<% end %>
+	</tbody>
+</table>
